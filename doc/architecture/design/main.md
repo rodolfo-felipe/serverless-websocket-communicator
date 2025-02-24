@@ -29,6 +29,7 @@ Este mesmo lambda escuta um tópico SNS para publicar mensagens no websocket.
 
 # [Contexto - Nível 1](./diagrams/context-architectural-diagram.md)
 # [Container - Nível 2](./diagrams/container-architectural-diagram.md)
+# [Sequência do fluxo de sucesso](./diagrams/success-flow-sequence-diagram.md)
 
 
 ## Contratos:
