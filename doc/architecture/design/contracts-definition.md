@@ -38,6 +38,8 @@ headers:
 
 A modelagem do DynamoDB foi feita considerando o envio de mensagens via websocket contemplando diferentes cenários.
 
+![image](https://github.com/user-attachments/assets/0a0626e8-3eee-47d7-9e13-f36ac6fe779d)
+
 ```plantuml
 @startjson
 {
@@ -81,6 +83,8 @@ O conteúdo que estiver no corpo da mensagem será publicado no websocket. Além
   - _**caller**_
 
 Ex.: 
+
+![image](https://github.com/user-attachments/assets/e19d1aeb-56cd-49e3-87b5-e96b6475bd65)
 
 ```plantuml
 @startjson
