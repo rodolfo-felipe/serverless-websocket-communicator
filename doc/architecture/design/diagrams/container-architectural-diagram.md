@@ -2,6 +2,7 @@
 
 ![image](https://github.com/user-attachments/assets/c52676ab-6446-42bd-abdc-5fb1f43b5804)
 
+```plantuml
 @startuml
 !define AWSPUML https://raw.githubusercontent.com/milo-minderbinder/AWS-PlantUML/release/18-2-22/dist
 
@@ -56,3 +57,4 @@ Rel_L(backend_apis, feedBackMessages, "4 - Publica mensagens para o websocket", 
 Rel_U(feedBackMessages, connectDisconectPublish, "5 - Barramento de mensagens de feedback para envio ao Websocket")
 
 @enduml
+```
