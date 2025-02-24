@@ -14,7 +14,7 @@ ao canal.
 
   - _**context**_: contexto da mensagem mensagem ou feature origem do envio da mensagem
   - _**contextId**_: identificador da origem da requisição
-  - _**caller**_: code do usuário conectado ao websocket
+  - _**caller/user**_: code do usuário conectado ao websocket
 
 
 #### 1 - Contrato de conexão do websocket
@@ -80,7 +80,7 @@ O conteúdo que estiver no corpo da mensagem será publicado no websocket. Além
 
   - _**context**_
   - _**contextId**_
-  - _**caller**_
+  - _**user**_
 
 Ex.: 
 
