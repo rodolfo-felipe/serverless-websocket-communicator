@@ -27,4 +27,4 @@ Este mesmo lambda escuta um tópico SNS para publicar mensagens no websocket.
 
 ## Diagramas:
 
-# [Contexto - Nível 1](./diagrams/level-1-context-diagram.md)
+# [Contexto - Nível 1](./diagrams/context-architectural-diagram.md)
