@@ -1,4 +1,4 @@
-### Diagrama de Contexto - Nível 1
+### Sequência - Fluxo de sucesso
 
 ![image](https://github.com/user-attachments/assets/5e27410a-2077-468b-b58d-0f291b0c9342)
 
