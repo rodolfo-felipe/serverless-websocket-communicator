@@ -1,16 +1,19 @@
 ### Sequência - Fluxo de sucesso
 
-![image](https://github.com/user-attachments/assets/5e27410a-2077-468b-b58d-0f291b0c9342)
+![image](https://github.com/user-attachments/assets/648431db-b463-42ee-b513-af3b5b321de0)
 
 ```plantuml
 @startuml
 
+actor User
 participant Client as "Client Web/Mobile"
 participant BackendApi
 queue       MentorAssistWebsocketPublisher as "MentorAssistWebsocketPublisher (SNS)"
 participant MentorAssistWebsocketGateway
 participant LambdaMentorAssistWebsocket
 database WSSessionDB
+
+User -> Client
 
 activate Client
 Client -> MentorAssistWebsocketGateway: connect websocket
@@ -80,6 +83,9 @@ deactivate LambdaMentorAssistWebsocket
 
 MentorAssistWebsocketGateway --> Client: message delivered to client
 deactivate MentorAssistWebsocketGateway
+
+Client -> User
+
 Client -> MentorAssistWebsocketGateway: disconnect websocket
 activate MentorAssistWebsocketGateway
 deactivate Client

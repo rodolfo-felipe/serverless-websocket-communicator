@@ -1,4 +1,4 @@
-# serverless-websocket-communicator
+# Serverless Websocket Communicator
 
 Repositório contendo os arquivos responsáveis pela arquitetura e MVP.
 
