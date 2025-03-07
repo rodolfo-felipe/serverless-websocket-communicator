@@ -1,0 +1,54 @@
+name: mentor-assist-websocket-lambda
+
+runtime: "java11"
+handler: "io.quarkus.amazon.lambda.runtime.QuarkusStreamHandler::handleRequest"
+filename: "mentor-assist-websocket-lambda.zip"
+s3_bucket: "devops-lambda-deployment-stg"
+
+publish: true
+concurrent: 2
+memory_size: 1024
+timeout: 30
+clean: 5
+
+security_group:
+  rules:
+    - type: "egress"
+      port: "443"
+      cidr_blocks:
+        - "0.0.0.0/0"
+
+## CI/CD DEPLOYMENT - ATTACH's POLICIES TO RESOURCES
+## ANONYMIZING ACCOUNT_ID TO PROTECT DATA
+infra:
+  role:
+    policy: |
+      {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Effect": "Allow",
+            "Action": [
+              "dynamodb:BatchWriteItem",
+              "dynamodb:UpdateTimeToLive",
+              "dynamodb:PutItem",
+              "dynamodb:DeleteItem",
+              "dynamodb:UpdateItem",
+              "dynamodb:Query"
+            ],
+            "Resource": [
+              "arn:aws:dynamodb:us-east-1:ACCOUNT_ID:table/mentor_assist_websocket_session",
+              "arn:aws:dynamodb:us-east-1:ACCOUNT_ID:table/mentor_assist_websocket_session/index/*"
+            ]
+          },{
+            "Effect": "Allow",
+            "Action": [
+                "execute-api:Invoke",
+                "execute-api:ManageConnections"
+            ],
+            "Resource": [
+                "arn:aws:execute-api:us-east-1:ACCOUNT_ID:8leux64qp5/staging/*"
+            ]
+          }
+        ]
+      }
