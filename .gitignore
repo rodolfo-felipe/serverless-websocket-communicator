@@ -26,9 +26,6 @@ replay_pid*
 .idea/misc.xml
 .idea/modules.xml
 .idea/serverless-websocket-communicator.iml
-.idea/sonarlint/issuestore/8/e/8ec9a00bfd09b3190ac6b22251dbb1aa95a0579d
-.idea/sonarlint/issuestore/index.pb
-.idea/sonarlint/securityhotspotstore/8/e/8ec9a00bfd09b3190ac6b22251dbb1aa95a0579d
-.idea/sonarlint/securityhotspotstore/index.pb
+.idea/sonarlint/*
 .idea/vcs.xml
 .idea/workspace.xml
