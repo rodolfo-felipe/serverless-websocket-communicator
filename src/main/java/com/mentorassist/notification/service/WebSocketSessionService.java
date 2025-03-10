@@ -10,17 +10,23 @@ import static com.mentorassist.notification.util.DbCompositeAttributeBuilder.get
 import static com.mentorassist.notification.util.DbCompositeAttributeBuilder.getCallerIdAttributeValue;
 import static com.mentorassist.notification.util.DbCompositeAttributeBuilder.getCompositeAttributeValueS;
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+import static org.jboss.logmanager.Level.WARN;
 
+import com.mentorassist.notification.util.Constants;
+import com.mentorassist.notification.util.DbCompositeAttributeBuilder;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
+import software.amazon.awssdk.services.dynamodb.model.DeleteItemRequest;
 import software.amazon.awssdk.services.dynamodb.model.PutItemRequest;
+import software.amazon.awssdk.services.dynamodb.model.QueryRequest;
 
 @ApplicationScoped
 public class WebSocketSessionService {
@@ -32,6 +38,9 @@ public class WebSocketSessionService {
 
   @ConfigProperty(name = "dynamodb.table")
   String tableName;
+
+  @ConfigProperty(name = "dynamodb.global_secondary_index")
+  String globalSecondaryIndex;
 
   @Inject
   DynamoDbClient dynamoDB;
@@ -61,5 +70,45 @@ public class WebSocketSessionService {
         .build();
 
     dynamoDB.putItem(request);
+  }
+
+  public void disconnect(String connectionId) {
+    log.log(Level.FINE, "Deleting session [ConnectionId: {0}] from DynamoDB.", connectionId);
+
+    var connectionData = dynamoDB.query(QueryRequest.builder()
+        .indexName(globalSecondaryIndex)
+        .tableName(tableName)
+        .keyConditionExpression(Constants.DB_CONNECTION_ID.concat(" = :connectionId"))
+        .expressionAttributeValues(
+            Map.of(":connectionId", DbCompositeAttributeBuilder.getAttributeValueS(connectionId)))
+        .build());
+
+    if (connectionData.hasItems()) {
+      try {
+        var item = connectionData.items().stream().findFirst().orElseThrow();
+
+        var key = Map.of(
+            Constants.DB_CALLER_ID, item.get(Constants.DB_CALLER_ID),
+            Constants.DB_CONTEXT, item.get(Constants.DB_CONTEXT));
+
+        var request = DeleteItemRequest.builder()
+            .tableName(tableName)
+            .key(key)
+            .build();
+
+        dynamoDB.deleteItem(request);
+
+      } catch (NoSuchElementException e) {
+        logSessionNotFound(connectionId);
+      }
+    } else {
+      logSessionNotFound(connectionId);
+    }
+  }
+
+  private void logSessionNotFound(String connectionId) {
+    log.log(
+        WARN,
+        String.format("Could not find session for ConnectionId: [%s].", connectionId));
   }
 }
