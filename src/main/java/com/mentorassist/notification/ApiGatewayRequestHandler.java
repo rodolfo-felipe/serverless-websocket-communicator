@@ -61,7 +61,7 @@ public class ApiGatewayRequestHandler
               connectionId, user.getUcode(), contextType, contextId, connectedAt);
           break;
         case "$disconnect":
-          // TODO WILL BE IMPLEMENTED
+          sessionService.disconnect(connectionId);
           break;
         default:
           throw new IllegalArgumentException("Received an invalid route key!");
