@@ -1,6 +1,11 @@
 ####################################################
 # MENTOR ASSIST WEBSOCKET GATEWAY                  #
 ####################################################
+data "aws_lambda_function" "mentor-assist-websocket-lambda" {
+  function_name = "mentor-assist-websocket-lambda"
+  qualifier     = "LATEST"
+}
+
 resource "aws_apigatewayv2_api" "mentor-assist-websocket-gateway" {
   name                       = "mentor-assist-websocket-gateway"
   description                = "API WebSockets for Mentor Assist (Staging)"
@@ -13,9 +18,15 @@ resource "aws_apigatewayv2_api" "mentor-assist-websocket-gateway" {
   }
 }
 
+## ANONYMIZING ACCOUNT_ID TO PROTECT DATA
 resource "aws_apigatewayv2_integration" "mentor-assist-websocket-connect" {
   api_id                    = aws_apigatewayv2_api.mentor-assist-websocket-gateway.id
-  integration_type          = "MOCK"
+  integration_type          = "AWS_PROXY"
+  connection_type           = "INTERNET"
+  content_handling_strategy = "CONVERT_TO_TEXT"
+  integration_method        = "POST"
+  integration_uri           = "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:ACCOUNT_ID:function:mentor-assist-websocket-lambda:LATEST/invocations"
+  passthrough_behavior      = "WHEN_NO_MATCH"
 }
 
 resource "aws_apigatewayv2_integration" "mentor-assist-websocket-disconnect" {
@@ -23,9 +34,15 @@ resource "aws_apigatewayv2_integration" "mentor-assist-websocket-disconnect" {
   integration_type          = "MOCK"
 }
 
+## ANONYMIZING ACCOUNT_ID TO PROTECT DATA
 resource "aws_apigatewayv2_integration" "mentor-assist-websocket-default" {
   api_id                    = aws_apigatewayv2_api.mentor-assist-websocket-gateway.id
-  integration_type          = "MOCK"
+  integration_type          = "AWS_PROXY"
+  connection_type           = "INTERNET"
+  content_handling_strategy = "CONVERT_TO_TEXT"
+  integration_method        = "POST"
+  integration_uri           = "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:ACCOUNT_ID:function:mentor-assist-websocket-lambda:LATEST/invocations"
+  passthrough_behavior      = "WHEN_NO_MATCH"
 }
 
 resource "aws_apigatewayv2_route" "mentor-assist-websocket-connect" {
@@ -84,6 +101,14 @@ resource "aws_apigatewayv2_stage" "mentor-assist-websocket-gateway" {
       access_log_settings["format"]
     ]
   }
+}
+
+resource "aws_lambda_permission" "mentor-assist-websocket-lambda-permission" {
+  function_name = data.aws_lambda_function.mentor-assist-websocket-lambda.function_name
+  statement_id  = "AllowExecutionFromApiGateway"
+  action        = "lambda:InvokeFunction"
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = "${aws_apigatewayv2_api.mentor-assist-websocket-gateway.execution_arn}/*/*"
 }
 
 #########################################################################################################
