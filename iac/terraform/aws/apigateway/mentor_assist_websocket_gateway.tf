@@ -31,7 +31,12 @@ resource "aws_apigatewayv2_integration" "mentor-assist-websocket-connect" {
 
 resource "aws_apigatewayv2_integration" "mentor-assist-websocket-disconnect" {
   api_id                    = aws_apigatewayv2_api.mentor-assist-websocket-gateway.id
-  integration_type          = "MOCK"
+  integration_type          = "AWS_PROXY"
+  connection_type           = "INTERNET"
+  content_handling_strategy = "CONVERT_TO_TEXT"
+  integration_method        = "POST"
+  integration_uri           = "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:ACCOUNT_ID:function:mentor-assist-websocket-lambda:LATEST/invocations"
+  passthrough_behavior      = "WHEN_NO_MATCH"
 }
 
 ## ANONYMIZING ACCOUNT_ID TO PROTECT DATA
