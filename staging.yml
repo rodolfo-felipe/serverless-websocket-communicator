@@ -18,6 +18,9 @@ security_group:
       cidr_blocks:
         - "0.0.0.0/0"
 
+env:
+  AWS_GATEWAY_CALLBACK_ENDPOINT: "https://mentor-assist-ws.buildstaging.com"
+
 ## CI/CD DEPLOYMENT - ATTACH's POLICIES TO RESOURCES
 ## ANONYMIZING ACCOUNT_ID TO PROTECT DATA
 infra:
