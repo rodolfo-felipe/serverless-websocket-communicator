@@ -85,4 +85,23 @@ resource "aws_apigatewayv2_stage" "mentor-assist-websocket-gateway" {
     ]
   }
 }
+
+#########################################################################################################
+## Internal DevOps automation module of the company "MentorAssist" that creates a "CUSTOM_DOMAIN_NAME"  #
+## for the ApiGateway and automatically relates it to a hosted zone domain name in "ROUTE 53" using     #
+## the "DOMAIN_NAME" ("mentor-assist-ws.buildstaging.com") and the DOMAIN ("buildstaging.com")          #
+#########################################################################################################
+module "mentor-assist-websocket-domain-mapping" {
+  source = "github.com/MentorAssist-Org/terraform-modules-aws-api-gateway?ref=v1.1.11/modules/websocket/domain-mapping"
+
+  acm_domain    = "buildstaging.com"
+  acm_types     = "AMAZON_ISSUED"
+  domain_name   = "mentor-assist-ws.buildstaging.com"
+  domain_type   = "REGIONAL"
+  domain_policy = "TLS_1_2"
+  api_id        = aws_apigatewayv2_api.mentor-assist-websocket-gateway.id
+  stage_id      = aws_apigatewayv2_stage.mentor-assist-websocket-gateway.id
+
+  depends_on = [aws_apigatewayv2_stage.mentor-assist-websocket-gateway]
+}
 ####################################################
