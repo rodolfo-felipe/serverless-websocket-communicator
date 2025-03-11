@@ -1,5 +1,5 @@
 ##############################################
-# mentor_assist_websocket_session                     #
+# mentor_assist_websocket_session            #
 ##############################################
 resource "aws_dynamodb_table" "mentor_assist_websocket_session" {
   name         = "mentor_assist_websocket_session"
