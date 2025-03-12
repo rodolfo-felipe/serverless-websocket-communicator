@@ -1,0 +1,22 @@
+python3 send_sns_message.py --attributes caller=4afd2390-4e3c-43cf-beba-8c8c053dd804 context=SingleSessionCreate contextId=Feature1 timestamp=1741706020839 --message "{                                                                                                                                                    
+  \"status\": \"SUCCESS\",
+  \"context\": \"SingleSessionCreate\",
+  \"message\": {
+    \"duplicationType\": \"MENTORING_SESSION\",
+    \"module\": {
+      \"id\": 1,
+      \"name\": \"Feature 1 do USER 1\",
+      \"extra\": false,
+      \"moduleOrder\": 1,
+      \"createDate\": \"2024-11-19T18:25:45Z\"
+    },
+    \"session\": {
+      \"id\": 2,
+      \"name\": \"Sessão Renata\",
+      \"type\": \"PERSONAL_SESSION\",
+      \"published\": false,
+      \"tags\": [],
+      \"attachmentIds\": []
+    }
+  }
+}"
